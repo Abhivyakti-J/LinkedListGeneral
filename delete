@@ -1,0 +1,438 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define INTEGER_TYPE 1
+#define STRING_TYPE 2
+#define FLOAT_TYPE 3
+
+struct data {
+    int type;  
+    int integer;
+    char string[1000];
+    float floating;
+};
+
+struct node {
+    struct data Data;
+    struct node *next;
+};
+
+typedef struct node NODE;
+NODE *InsertFInt(NODE *S, int x) {
+    NODE *temp = (NODE *)malloc(sizeof(NODE));
+    temp->Data.integer = x;
+    temp->Data.type = INTEGER_TYPE; 
+    temp->next = S;  
+    return temp;    
+}
+
+NODE *InsertFStr(NODE *S, char y[1000]) {
+    NODE *temp = (NODE *)malloc(sizeof(NODE));
+    strcpy(temp->Data.string, y);
+    temp->Data.type = STRING_TYPE;  
+    temp->next = S;  
+    return temp;     
+}
+
+NODE *InsertFFlo(NODE *S, float z) {
+    NODE *temp = (NODE *)malloc(sizeof(NODE));
+    temp->Data.floating = z;
+    temp->Data.type = FLOAT_TYPE;    
+    temp->next = S;  
+    return temp;    
+}
+void display(NODE *S) {
+    NODE *p = S;
+    if (S == NULL) {
+        printf("\nNo elements to display.\n");
+        return;
+    }
+    printf("\nData elements in the linked list:\n");
+
+	for (p = S; p != NULL; p = p->next){
+        switch (p->Data.type) {
+            case INTEGER_TYPE:
+                printf("\n%d", p->Data.integer);
+                break;
+            case STRING_TYPE:
+                printf("\n%s", p->Data.string); 
+                break;
+            case FLOAT_TYPE:
+                printf("\n%.2f", p->Data.floating);
+                break;
+            
+        }
+        printf("\t%d",p->next);
+        
+    }
+}
+
+int sizeS(NODE *S) {
+    NODE *p;
+    int count = 0;
+    for (p = S; p != NULL; p = p->next) {
+        count++;
+    }
+    return count;
+}
+NODE *InsertLInt(NODE *S, int x) {
+    NODE *p,*temp;
+    if (S == NULL) {
+        S=temp;
+    } 
+	else {
+		temp = (NODE *)malloc(sizeof(NODE));
+    	temp->Data.integer=x;
+    	temp->Data.type = INTEGER_TYPE;
+    	temp->next = NULL;
+        for(p=S;p->next!=NULL;p=p->next);
+        p->next = temp;  
+    }
+    return S;
+}
+NODE *InsertLStr(NODE *S, char y[1000]) {
+    NODE *p,*temp;
+    if (S == NULL) {
+        S=temp;
+    } 
+	else {
+		temp = (NODE *)malloc(sizeof(NODE));
+    	strcpy(temp->Data.string, y);
+    	temp->Data.type = STRING_TYPE;
+    	temp->next = NULL;
+        for(p=S;p->next!=NULL;p=p->next);
+        p->next = temp;  
+    }
+    return S;
+}
+NODE *InsertLFlo(NODE *S, float z) {
+    NODE *p,*temp;
+    if (S == NULL) {
+        S=temp;
+    } 
+	else {
+		temp = (NODE *)malloc(sizeof(NODE));
+    	temp->Data.floating= z;
+    	temp->Data.type = FLOAT_TYPE;
+    	temp->next = NULL;
+        for(p=S;p->next!=NULL;p=p->next);
+        p->next = temp;  
+    }
+    return S;
+}
+NODE *InsertRInt(NODE *S, int x, int pos) {
+    NODE *temp, *p;
+    int i,l;    
+    if (pos == 1)
+        S=InsertFInt(S,x);
+    else if(pos==(l+1))
+    	S=InsertLInt(S,x);
+    else if(pos<1 || pos>(l+1))
+		printf("\nInsertion not possible")	;
+	else if(pos>1 && pos<=l){
+		temp = (NODE *)malloc(sizeof(NODE));
+	    temp->Data.integer=x;
+	    temp->Data.type = INTEGER_TYPE;
+	    temp->next = NULL;
+	    for (i=1,p=S;i < pos - 1; i++,p = p->next);
+        temp->next = p->next;
+        p->next = temp;
+    }
+    else 
+    	printf("\nNot possible");
+    return S;
+}
+NODE *InsertRStr(NODE *S, char y[1000], int pos) {
+    NODE *temp, *p;
+    int i,l;
+    
+    if (pos == 1)
+        S=InsertFStr(S,y);
+    else if(pos==(l+1))
+    	S=InsertLStr(S, y);
+    else if(pos<1 || pos>(l+1))
+		printf("\nInsertion not possible")	;
+	else if(pos>1 && pos<=l){
+		temp = (NODE *)malloc(sizeof(NODE));
+	    strcpy(temp->Data.string, y);
+	    temp->Data.type = STRING_TYPE;
+	    temp->next = NULL;
+	    for (i=1,p=S;i < pos - 1; i++,p = p->next);
+        temp->next = p->next;
+        p->next = temp;
+    }
+    else 
+    	printf("\nNot possible");
+    return S;
+}
+NODE *InsertRFlo(NODE *S, float z, int pos) 
+{
+	NODE *temp, *p;
+    int i,l;    
+    if (pos == 1)
+        S=InsertFFlo(S,z);
+    else if(pos==(l+1))
+    	S=InsertLFlo(S, z);
+    else if(pos<1 || pos>(l+1))
+		printf("\nInsertion not possible")	;
+	else if(pos>1 && pos<=l){
+		temp = (NODE *)malloc(sizeof(NODE));
+	    temp->Data.floating=z;
+	    temp->Data.type = FLOAT_TYPE;
+	    temp->next = NULL;
+	    for (i=1,p=S;i < pos - 1; i++,p = p->next);
+        temp->next = p->next;
+        p->next = temp;
+    }
+    else 
+    	printf("\nNot possible");
+    return S;
+}
+NODE * DeleteF(NODE * S)
+{
+	NODE *d;
+	int x;
+	if(S==NULL)
+		printf("\nEmpty");
+	else 
+	{
+		d=S;
+		if(d->Data.type==INTEGER_TYPE)
+			printf("\n%d has been deleted",d->Data.integer);
+		else if(d->Data.type==FLOAT_TYPE)
+			printf("\n%.2f has been deleted",d->Data.floating);
+		else
+			printf("\n%s has been deleted",d->Data.string);
+		S=d->next;
+		free(d);
+	}
+	return S;
+}
+NODE * DeleteL(NODE * S)
+{
+	NODE *t,*p;
+	int x;
+	if(S==NULL)
+		printf("\nEmpty");
+	else if(S->next==NULL)
+		S=DeleteF(S);
+	else
+	{
+		for(p=S;p->next->next!=NULL;p=p->next);
+		t=p->next;
+		p->next=NULL;
+		if(t->Data.type==INTEGER_TYPE)
+			printf("\n%d has been deleted",t->Data.integer);
+		else if(t->Data.type==FLOAT_TYPE)
+			printf("\n%.2f has been deleted",t->Data.floating);
+		else
+			printf("\n%s has been deleted",t->Data.string);
+		free(t);
+	}
+	return S;
+}
+NODE * DeleteR(NODE * S,int pos)
+{
+	int l,x,i;
+	NODE *p,*t;
+	if(S==NULL)
+		printf("\nEmpty");
+	else if(pos==1)
+		S=DeleteF(S);
+	else if(l==pos)
+		S=DeleteL(S);
+	else if(pos>1 && pos<l)
+	{
+		for(p=S,i=1;i<(pos-1);p=p->next,i++);
+		t=p->next;
+		p->next=t->next;
+		if(t->Data.type==INTEGER_TYPE)
+			printf("\n%d has been deleted",t->Data.integer);
+		else if(t->Data.type==FLOAT_TYPE)
+			printf("\n%.2f has been deleted",t->Data.floating);
+		else
+			printf("\n%s has been deleted",t->Data.string);
+		free(t);
+	}
+	else
+		printf("\nCannot delete at this position");
+	return S;
+}
+
+
+
+void main() {
+    NODE *S = NULL;
+    int choice, marzi,ch, x,pos;
+    float z;
+    char y[1000];
+	Menu:
+    printf("\n\nMenu:");
+    printf("\n1. Initialize");
+    printf("\n2. Insert ");
+    printf("\n3. Delete");
+    printf("\n4. Size");
+    printf("\n5. Display");
+    printf("\n6. Exit");
+    printf("\nEnter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            S = NULL;
+            printf("\nLinked list initialized.\n");
+            goto Menu;
+
+        case 2:
+        	Insert:
+            printf("\n1. Insert First");
+            printf("\n2. Insert Last");
+            printf("\n3. Insert Random");
+            printf("\n4. Return to main menu");
+            printf("\nEnter your choice: ");
+            scanf("%d", &ch);	
+            switch(ch)
+            {
+            	case 1:
+					printf("\nInsert data:");
+	                printf("\n1. Insert Integer");
+	                printf("\n2. Insert String");
+	                printf("\n3. Insert Float");
+	                printf("\nEnter your choice: ");
+	                scanf("%d", &marzi);
+	                switch (marzi) {
+	                    case 1:
+	                        printf("Enter an integer: ");
+	                        scanf("%d", &x);
+	                        S = InsertFInt(S, x); 
+	                        goto Insert;
+	                    case 2:
+	                        printf("Enter a string: ");
+	                        fflush(stdin);
+							gets(y); 
+	                        S = InsertFStr(S, y);  
+	                        goto Insert;
+	                    case 3:
+	                        printf("Enter a float: ");
+	                        scanf("%f", &z);
+	                        S = InsertFFlo(S, z);  
+	                        goto Insert;
+	                    default:
+	                        printf("Invalid choice.\n");
+	                }
+	                goto Insert;
+                case 2:
+                	printf("\nInsert data:");
+	                printf("\n1. Insert Integer");
+	                printf("\n2. Insert String");
+	                printf("\n3. Insert Float");
+	                printf("\nEnter your choice: ");
+	                scanf("%d", &marzi);
+	                switch (marzi) {
+	                    case 1:
+	                        printf("Enter an integer: ");
+	                        scanf("%d", &x);
+	                        S = InsertLInt(S, x); 
+	                        goto Menu;
+	                    case 2:
+	                        printf("Enter a string: ");  
+	                        fflush(stdin);
+							gets(y); 
+	                        S = InsertLStr(S, y);  
+	                        goto Menu;
+	                    case 3:
+	                        printf("Enter a float: ");
+	                        scanf("%f", &z);
+	                        S = InsertLFlo(S, z);  
+	                        goto Menu;
+	                    default:
+	                        printf("Invalid choice.\n");
+	                }
+	                goto Menu;
+				case 3:
+                	printf("\nInsert data:");
+	                printf("\n1. Insert Integer");
+	                printf("\n2. Insert String");
+	                printf("\n3. Insert Float");
+	                printf("\nEnter your choice: ");
+	                scanf("%d", &marzi);
+	                switch (marzi) {
+	                    case 1:
+	                        printf("\nEnter Position on which data is to be entered: ");
+							scanf("%d",&pos);
+							printf("\nEnter data to be entered: ");
+							scanf("%d",&x);
+							S=InsertRInt(S,x,pos);
+					goto Insert;
+	                    case 2:
+	                    	printf("\nEnter Position on which data is to be entered: ");
+							scanf("%d",&pos);
+	                        printf("Enter a string: ");  
+	                        fflush(stdin);
+							gets(y); 
+	                        S = InsertRStr(S, y,pos);  
+	                        goto Menu;
+	                    case 3:
+	                    	printf("\nEnter Position on which data is to be entered: ");
+							scanf("%d",&pos);
+	                        printf("Enter a float: ");
+	                        scanf("%f", &z);
+	                        S = InsertRFlo(S, z,pos);  
+	                        goto Menu;
+	                    default:
+	                        printf("Invalid choice.\n");
+	                }
+	                goto Menu;		
+			}		
+		case 3:
+			//Delete
+			Delete:
+			printf("\n1. Delete First");
+			printf("\n2. Delete Last");
+			printf("\n3. Delete Random");
+			printf("\n4. Return to main Menu");
+			printf("\nEnter choice:  ");
+			scanf("%d",&ch);
+			
+			switch(ch)
+			{
+				case 1://Delete first
+					S=DeleteF(S);
+					goto Delete;
+				case 2:
+					//Delete last
+					S=DeleteL(S);
+					goto Delete;
+				case 3:
+					//insert random
+					printf("\nEnter Position on which data is to be entered: ");
+					scanf("%d",&pos);
+					S=DeleteR(S,pos);
+					goto Delete;
+				case 4:
+					goto Menu;
+				default:
+					printf("\nWrong choice");
+					goto Delete;
+			}
+			
+			
+        case 4:
+            printf("\nSize of the linked list: %d\n", sizeS(S));
+            goto Menu;
+
+        case 5:
+            display(S);
+            goto Menu;
+
+        case 6:
+            printf("\nExiting...\n");
+            break;
+
+        default:
+            printf("Invalid choice. Please try again.\n");
+            goto Menu;
+    
+    }
+}
